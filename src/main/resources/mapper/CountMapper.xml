@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bme.syx.statistics.dao.CountMapper">
+
+
+
+
+    <select id="selectAllCustomer" resultType="com.bme.syx.statistics.entity.Customer" >
+        select  customer_id as customerId,
+                customer_name as customerName
+        from  t_customer
+    </select>
+
+
+    <select id="selectCountByPTypes" resultType="com.bme.syx.statistics.entity.CountEntity" >
+        select  customer_id as customerId,
+                count(0) as count
+         from  t_device
+        where primary_type_id in (#{typeIds})
+        group by  customer_id  order by customer_id ;
+    </select>
+
+    <select id="selectCountSignalByPTypes" resultType="com.bme.syx.statistics.entity.CountEntity" >
+
+        select ts.customer_id as customerId,
+               count(0) as count
+        from  t_signal ts
+            join t_device_signal  tds  on  ts.signal_no = tds.signal_no
+            join t_device td on td.device_no = tds.device_no and  primary_type_id  in (#{typeIds})
+        group by  ts.customer_id  order by customerId;
+    </select>
+
+    <select id="selectCountSignalByTypesOld" resultType="com.bme.syx.statistics.entity.CountEntity" >
+        select customer_id as customerId,
+               count(0) as count
+        from  t_signal where signal_no in
+            (select  signal_no from  t_device_signal where device_no in
+            (select  device_no from  t_device where primary_type_id  in (#{typeIds}) ))
+        group by  customer_id  order by customer_id;
+    </select>
+
+
+
+    <select id="selectCountByTypes" resultType="com.bme.syx.statistics.entity.CountEntity" >
+        select  customer_id as customerId,
+                count(0) as count
+        from  t_device
+        where type_id in (${typeIds})
+        group by  customer_id  order by customer_id ;
+    </select>
+
+
+    <select id="selectCountSignalByTypes" resultType="com.bme.syx.statistics.entity.CountEntity" >
+        select ts.customer_id as customerId,
+               count(0) as count
+        from  t_signal ts
+            join t_device_signal  tds  on  ts.signal_no = tds.signal_no
+            join t_device td on td.device_no = tds.device_no and  type_id  in (${typeIds})
+        group by  ts.customer_id  order by customerId;
+    </select>
+
+
+</mapper>

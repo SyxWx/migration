@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bme.syx.cloud.dao.EmissionSourceMapper">
+    <insert id="insertEmissionSource" parameterType="list">
+        INSERT INTO `t_import_emission_source`
+        (
+        `emission_source_no`,
+        `emission_source_name`,
+        `emission_source_type`,
+        `customer_id`,
+        `branch_factory`,
+        `production_line`,
+        `processes`,
+        `process_section`,
+        `static_production_name`,
+        `static_production_info`,
+        `close_detail`,
+        `materiel`,
+        `image_url`,
+        `organization_type`,
+        `production_describe`,
+        `government_describe`,
+        `monitor_describe`,
+        `import_data`,
+        `shed_no`
+        )
+        VALUES
+        <foreach collection="list" item="i" separator=",">
+            (
+            #{i.emission_source_no},
+            #{i.emission_source_name},
+            #{i.emission_source_type},
+            #{i.customer_id},
+            #{i.branch_factory},
+            #{i.production_line},
+            #{i.processes},
+            #{i.process_section},
+            #{i.static_production_name},
+            #{i.static_production_info},
+            #{i.close_detail},
+            #{i.materiel},
+            #{i.image_url},
+            #{i.organization_type},
+            #{i.production_describe},
+            #{i.government_describe},
+            #{i.monitor_describe},
+            #{i.import_data},
+            #{i.shed_no}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateEmissionType" parameterType="String">
+        update t_import_emission_source td set emission_source_id =
+           ( select id from  t_dictionary tt where  td.emission_source_type =  tt.dict_value and tt.customer_id  = #{customerId}  and type =1)
+        where td.customer_id  = #{customerId} ;
+    </update>
+
+    <update id="updateEmissionFactory" parameterType="String">
+        update t_import_emission_source td set branch_factory_id =
+         ( select id from  t_dictionary tt where  td.branch_factory =  tt.dict_value and tt.customer_id  =#{customerId} and type =2)
+        where td.customer_id  = #{customerId};
+    </update>
+
+    <update id="updateEmissionLine" parameterType="String">
+        update t_import_emission_source td set production_line_id =
+        ( select id from  t_dictionary tt where  td.production_line =  tt.dict_value and tt.customer_id  = #{customerId} and type =3)
+        where td.customer_id  = #{customerId};
+    </update>
+
+    <update id="updateEmissionSection" parameterType="String">
+        update t_import_emission_source td set process_section_id =
+        ( select id from  t_dictionary tt where  td.process_section =  tt.dict_value and tt.customer_id  = #{customerId} and type =4)
+        where td.customer_id  = #{customerId};
+    </update>
+
+    <update id="updateEmissionOrganizationW" parameterType="String">
+        update t_import_emission_source  set organization_type = 1 where  organization_type like '%无%' and customer_id = #{customerId};
+    </update>
+
+    <update id="updateEmissionOrganizationY" parameterType="String">
+        update t_import_emission_source  set organization_type = 2 where  organization_type like '%有%' and customer_id = #{customerId};
+    </update>
+
+</mapper>

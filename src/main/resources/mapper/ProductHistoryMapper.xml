@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bme.syx.module.productdata.dao.tdb.ProductHistoryMapper">
+
+
+    <select id="findProductList" resultType="java.util.Map" parameterType="string">
+        SELECT
+            device_no,
+            RIGHT ( node_id, LEN( node_id ) - 7 ) identifier,
+            category_id
+        FROM
+            car_wash_base
+        WHERE
+            status = 1
+          AND is_opc = 1
+          AND facility_category = 4
+          AND source=#{source}
+    </select>
+
+</mapper>

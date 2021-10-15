@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bme.syx.cloud.dao.EmissionSourceDeviceMapper">
+    <insert id="insertEmissionSourceDevice" parameterType="list">
+        INSERT INTO `t_import_emission_source_device`
+        (
+        `emission_source_no`,
+        `device_no`,
+        `customer_id`,
+        `import_data`
+        )
+        VALUES
+        <foreach collection="list" item="i" separator=",">
+            (
+            #{i.emission_source_no},
+            #{i.device_no},
+            #{i.customer_id},
+            #{i.import_data}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateEmissionDeviceName" parameterType="String">
+        update  t_import_emission_source_device sd set
+            sd.device_name = (select td.device_name from  t_device td where td.customer_id = #{customerId} and td.device_no = sd.device_no )
+        where customer_id = #{customerId};
+    </update>
+
+    <update id="updateEmissionDeviceType" parameterType="String">
+        update  t_import_emission_source_device sd set
+            sd.type_id = (select td.type_id from  t_device td where td.customer_id = #{customerId} and td.device_no = sd.device_no )
+        where customer_id = #{customerId};
+    </update>
+
+</mapper>

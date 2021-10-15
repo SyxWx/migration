@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bme.syx.cloud.dao.DeviceMapper">
+    <insert id="insertDevice" parameterType="list">
+        INSERT INTO `t_import_device`
+        (
+        `device_no`,
+        `device_name`,
+        `device_alias_name`,
+        `customer_id`,
+        `branch_factory`,
+        `production_line`,
+        `longitude`,
+        `latitude`,
+        `primary_type_name`,
+        `last_type_name`,
+        `detail_info`,
+        `import_data`,
+        `remark`
+        )
+        VALUES
+        <foreach collection="list" item="i" separator=",">
+            (
+            #{i.device_no},
+            #{i.device_name},
+            #{i.device_alias_name},
+            #{i.customer_id},
+            #{i.branch_factory},
+            #{i.production_line},
+            #{i.longitude},
+            #{i.latitude},
+            #{i.primary_type_name},
+            #{i.last_type_name},
+            #{i.detail_info},
+            #{i.import_data},
+            #{i.remark}
+            )
+        </foreach>
+    </insert>
+
+
+    <update id="updateDeviceFactory" parameterType="String">
+        update t_import_device td set branch_factory_id =
+         ( select id from  t_dictionary tt where  td.branch_factory =  tt.dict_value and tt.customer_id  =#{customerId} and type =2)
+        where td.customer_id  = #{customerId};
+    </update>
+
+    <update id="updateDeviceLine" parameterType="String">
+        update t_import_device td set production_line_id =
+        ( select id from  t_dictionary tt where  td.production_line =  tt.dict_value and tt.customer_id  = #{customerId} and type =3)
+        where td.customer_id  = #{customerId};
+    </update>
+
+    <update id="updateDevicePType" parameterType="String">
+        update t_import_device td set primary_type_id = ( select tt.type_id from  t_device_type tt where  td.primary_type_name =  tt.type_name )
+        where td.customer_id  = #{customerId};
+    </update>
+
+    <update id="updateDeviceType" parameterType="String">
+        update t_import_device td set type_id = ( select  tt.type_id from  t_device_type tt where   tt.type_name  = td.last_type_name)
+        where td.customer_id  =  #{customerId};
+    </update>
+
+    <update id="updateDeviceGBTdc" parameterType="String">
+        update t_import_device td set td.gb_tdc = ( select  tt.gb_tdc from  t_device_gb tt where   tt.device_no  = td.device_no)
+        where td. customer_id  = #{customerId};
+    </update>
+
+    <update id="updateDeviceGBSo2" parameterType="String">
+        update t_import_device td set td.gb_so2 = ( select  tt.gb_so2 from  t_device_gb tt where   tt.device_no  = td.device_no)
+        where td. customer_id  =#{customerId};
+    </update>
+
+    <update id="updateDeviceGBNox" parameterType="String">
+        update t_import_device td set td.gb_nox = ( select  tt.gb_nox from  t_device_gb tt where   tt.device_no  = td.device_no)
+        where td. customer_id  = #{customerId};
+    </update>
+
+    <update id="updateDeviceLongitudeNull" parameterType="String">
+        update t_import_device set longitude = null where customer_id  =  #{customerId} and longitude = '0.00000000000000';
+    </update>
+
+    <update id="updateDeviceLatitudeNull" parameterType="String">
+        update t_import_device set latitude = null where customer_id  =  #{customerId} and latitude = '0.00000000000000'
+    </update>
+
+
+
+
+
+</mapper>

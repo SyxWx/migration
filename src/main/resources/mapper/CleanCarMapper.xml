@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bme.syx.cloud.dao.CleanCarMapper">
+    <insert id="insertCleanCarList" parameterType="list">
+        INSERT INTO `t_import_cleancar_info`
+        (
+        `customer_id`,
+        `device_no`,
+        `device_name`,
+        `dtu_num`,
+        `dtu_name`,
+        `type_id`,
+        `type_name`,
+        `remarks`,
+        `import_data`
+        )
+        VALUES
+        <foreach collection="list" item="i" separator=",">
+            (
+            #{i.customer_id},
+            #{i.device_no},
+            #{i.device_name},
+            #{i.dtu_num},
+            #{i.dtu_name},
+            #{i.type_id},
+            #{i.type_name},
+            #{i.remarks},
+            #{i.import_data}
+            )
+        </foreach>
+    </insert>
+
+</mapper>
