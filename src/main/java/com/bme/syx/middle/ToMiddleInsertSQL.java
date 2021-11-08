@@ -105,7 +105,7 @@ public class ToMiddleInsertSQL {
 
 
          -- 更新period
-         UPDATE data_types SET period=30 WHERE remark LIKE '30%' AND period IS NULL
+         UPDATE data_types SfindProductDataET period=30 WHERE remark LIKE '30%' AND period IS NULL
          UPDATE data_types SET period=60 WHERE (remark LIKE '一分钟%' OR remark LIKE '1分钟%') AND period IS NULL
          UPDATE data_types SET period=300 WHERE (remark LIKE '5分钟%' OR remark LIKE '五分钟%') AND period IS NULL
 
