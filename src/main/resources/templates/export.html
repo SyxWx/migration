@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <title>导出设备数据值</title>
+</head>
+<body>
+
+
+<a>设备号：</a> <input id = "deviceNo" type="text" name="设备号" >
+<p> </p>
+
+<a>开始时间：</a>  <input id = "startTime" type="datetime-local" name="开始时间" >
+<p> </p>
+
+<a>结束时间：</a> <input id = "endTime" type="datetime-local" name="结束时间" >
+<p> </p>
+
+<a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+<button onclick="exportss()">查询</button>
+
+</body>
+
+</html>
+
+<script type="text/javascript">
+    function exports(){
+        var deviceNo = document.getElementById("deviceNo");
+        var startTime = document.getElementById("startTime");
+        var endTime = document.getElementById("endTime");
+
+        if(deviceNo!=null && deviceNo.value!=null && startTime!=null && startTime.value!=null && endTime !=null && endTime!=null){
+            var url = "https://vis.bmetech.com/vis/export/values/byDeviceNo";
+            var params = "deviceNo:"+deviceNo.value+"&startTime:"+startTime.value+"&endTime="+endTime.value;
+            alert(url + "---" + params);
+            $.ajax({
+                url:url,
+                dataType:"json",
+                type:"get",
+                data: params,
+                success: function(data){
+                    alert("导出成功！！"+data);
+                }
+            });
+
+        }
+    }
+    function exportss(){
+        //上面的http请求对象的生成做了一个浏览器兼容性处理
+        var deviceNo = document.getElementById("deviceNo").value;
+        var startTime = document.getElementById("startTime").value;
+        var endTime = document.getElementById("endTime").value;
+        var url = "https://vis.bmetech.com/vis/export/values/byDeviceNo";
+        var params = "deviceNo="+deviceNo+"&startTime="+startTime+"&endTime="+endTime;
+
+        var xmlhttp;
+        if (window.XMLHttpRequest){//IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp=new XMLHttpRequest();
+        }
+        else{// IE6, IE5
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+
+
+        xmlhttp.onreadystatechange=function(){
+        //当接受到响应时回调该方法
+            if (xmlhttp.readyState==4 && (xmlhttp.status==200||xmlhttp.status==0))
+            {
+                alert("11111");
+            }
+        }
+        xmlhttp.open("GET",url,true);//以GET方式请求该接口
+        xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");//添加Content-type
+        xmlhttp.send(params);//发送请求参数间用&分割
+    }
+
+
+
+</script>

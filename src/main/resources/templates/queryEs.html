@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QueryEs</title>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Query Es by CustomerId and DeviceNo</h1>
+
+    <table>
+        <th>设备号：<input type="text" name="deviceNo1" id="deviceNo" value = "BMEVDM0A210521012"></th>
+        <th>客户号：<input type="text" id="customerId" value = "42"></th>
+        <th><input type="button" value="查询" onclick="queryEs()"></th>
+    </table>
+
+    <div id = "div1" style="width: 600px;  height: 300px ;border:1px solid #f00;">
+        <h3 style="text-align: center">查询结果</h3>
+        <div id = "resdiv" style="width: 580px;  height: 200px ;border:1px solid #f00; word-wrap:break-word;text-align: left">
+        <div>
+    </div>
+</body>
+<script language="JavaScript">
+
+    function queryEs(){
+        var deviceNo = document.getElementById("deviceNo").value;
+        var customerId = document.getElementById("customerId").value;
+        if(deviceNo!=null &&  deviceNo!="" &&  customerId!=null && customerId!= ""){
+            $.ajax({
+                type:"POST",
+                url:"http://localhost:8080/mig/QueryEs/getMon",
+                async:false,
+                data: {deviceNo:deviceNo,customerId:customerId},
+                dataType:"text",
+                success:function (msg){
+                    var esMonitorReal = JSON.parse(msg);
+                    $("#resdiv").html(msg);
+                }
+            });
+        }else{
+            alert("请输入合法的设备号和客户号！！");
+        }
+    }
+
+</script>
+</html>

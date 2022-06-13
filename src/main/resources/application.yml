@@ -16,6 +16,10 @@ spring:
     minIdle: 5
     maxActive: 20
 
+  elasticsearch:
+    jest:
+      uris: http://172.31.235.81:9200, http://172.31.235.62:9200, http://172.31.235.69:9200
+
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
   typeAliasesPackage: com.bme.syx.cloud,*

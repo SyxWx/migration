@@ -1,7 +1,6 @@
 package com.bme.syx.kdxfj.service;
 
 
-import com.iflytek.cloud.speech.SpeechSynthesizer;
 import com.jacob.activeX.ActiveXComponent;
 import com.jacob.com.Dispatch;
 import com.jacob.com.Variant;

@@ -7,7 +7,7 @@ public class UnsafeBank {
 
 
     public static void main(String[] args) {
-        Accout accout = new Accout(100,"结婚基金");
+        Accout accout = new Accout(1000,"结婚基金");
 
         Drawing   you  = new Drawing(accout,50,"小王");
 
@@ -54,31 +54,35 @@ class Drawing extends Thread{
     //取钱
 
     @Override
-    public  void  run(){
-        //判断余额是否充足
-        if(accout.money - drawingMoney < 0){
-            System.out.println(Thread.currentThread().getName()+":余额不足，取钱失败");
-            return;
-        }
-
+    public    void  run(){
 
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        // 卡内余额扣款
-        accout.money = accout.money - drawingMoney;
 
-        //手中的钱
-        nowMoney  = nowMoney + drawingMoney;
+        while(true) {
+            synchronized (accout) {
+                //判断余额是否充足
+                if (accout.money - drawingMoney < 0) {
+                    System.out.println(Thread.currentThread().getName() + ":余额不足，取钱失败");
+                    return;
+                }
+                // 卡内余额扣款
+                accout.money = accout.money - drawingMoney;
 
-        System.out.println(this.getName()+"你取钱："+drawingMoney+"成功；");
-        System.out.println(accout.name+"账户余额剩余:"+accout.money);
-        // this.getName()  =  Thread.currentThread().getName()
+                //手中的钱
+                nowMoney = nowMoney + drawingMoney;
 
-        System.out.println(this.getName()+"手中钱："+nowMoney);
+                System.out.println("--------------------------" + this.getName() + "你取钱：" + drawingMoney + "成功；" + "-------------------------------");
+                System.out.println(accout.name + "账户余额剩余:" + accout.money);
+                // this.getName()  =  Thread.currentThread().getName()
+                System.out.println(this.getName() + "手中钱：" + nowMoney);
+                System.out.println("---------------------------------------------------------");
+            }
 
+        }
 
     }
 

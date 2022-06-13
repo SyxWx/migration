@@ -8,7 +8,7 @@
     <select id="selectAllCustomer" resultType="com.bme.syx.statistics.entity.Customer" >
         select  customer_id as customerId,
                 customer_name as customerName
-        from  t_customer
+        from  t_customer  where customer_id not in (-88,19,20,21,25,35,54,58,60,66,71,72,75);
     </select>
 
 

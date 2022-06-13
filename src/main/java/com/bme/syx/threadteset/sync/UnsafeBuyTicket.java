@@ -6,13 +6,14 @@ package com.bme.syx.threadteset.sync;
 public class UnsafeBuyTicket {
     public static void main(String[] args) {
         BuyTicket buyTicket = new BuyTicket();
+        BuyTicket buyTicket2 = new BuyTicket();
+        BuyTicket buyTicket3 = new BuyTicket();
 
-        Thread thread1 = new Thread(buyTicket,"苦逼的我");
-        Thread thread2 = new Thread(buyTicket,"牛逼的你们");
-        Thread thread3 = new Thread(buyTicket,"客户的黄牛党");
-        thread1.start();
-        thread2.start();
-        thread3.start();
+
+        new Thread(buyTicket,"线程1").start();
+        new Thread(buyTicket,"线程2").start();
+        new Thread(buyTicket,"线程3").start();
+
     }
 
 }
@@ -20,16 +21,18 @@ public class UnsafeBuyTicket {
 
 class BuyTicket implements  Runnable{
     //票
-    private int ticketNums = 10;
-
+    private int ticketNums = 20;
     private boolean flag = true;
-
     @Override
     public void run() {
         //买票
         while(flag){
+
             try {
+                // 模拟延时
+
                 buy();
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -37,16 +40,14 @@ class BuyTicket implements  Runnable{
     }
 
     //买票 方法
-    private void buy() throws InterruptedException {
+    private synchronized void buy() throws InterruptedException {
         //判断票是否还有余票
         if(ticketNums <= 0){
             flag = false;
             return;
         }
-        // 模拟延时
-        Thread.sleep(300);
         //买票
-        System.out.println(Thread.currentThread().getName()+":买到票了,"+ticketNums+";余票："+ticketNums-- +"张！！");
+        System.out.println(Thread.currentThread().getName()+":买到票了,"+ticketNums-- +";余票："+ticketNums +"张！！");
 
     }
 }
