@@ -1,8 +1,8 @@
 package com.bme.syx.es.web;
 
 import com.bme.syx.es.entity.EsMonitorRealTime;
-import com.bme.syx.es.service.TestEsQuery;
-import net.sf.json.JSONObject;
+import com.bme.syx.es.service.EsDeviceService;
+import com.bme.syx.es.service.EsQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +18,7 @@ public class QueryEsController {
 
 
     @Autowired
-    private TestEsQuery testEsQuery;
+    private EsDeviceService esDeviceService;
 
 
     //http://localhost:8080/mig/QueryEs/queryEs
@@ -29,17 +29,12 @@ public class QueryEsController {
 
     //http://localhost:8080/mig/QueryEs/getMon
     //http://localhost:8080/mig/QueryEs/getMon?deviceNo=BMEVDM0A210521012&customerId=42
+    //http://localhost:8080/mig/QueryEs/getMon?deviceNo=AG-ZL-LTC-070&customerId=15
     @RequestMapping(value = "getMon")
     @ResponseBody
     public  String getMonitorReal(@RequestParam("deviceNo")String deviceNo, @RequestParam("customerId")long customerId){
 
-        List<EsMonitorRealTime> list = new ArrayList<EsMonitorRealTime>();
-        list = testEsQuery.queryEs(deviceNo,customerId);
-        String res = "";
-        if(list!=null && list.size()>0){
-            EsMonitorRealTime esMonitorRealTime = list.get(0);
-            res = JSONObject.fromObject(list.get(0)).toString();
-        }
+        String res = esDeviceService.getDeviceType(deviceNo,customerId);
         return  res;
     }
 }
