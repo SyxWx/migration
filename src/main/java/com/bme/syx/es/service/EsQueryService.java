@@ -3,6 +3,7 @@ package com.bme.syx.es.service;
 import com.bme.syx.es.entity.EsDusterRealTime;
 import com.bme.syx.es.entity.EsMonitorRealTime;
 import com.bme.syx.es.entity.EsProductRealTime;
+import com.bme.syx.es.entity.EsSignalRealTime;
 import io.searchbox.client.JestClient;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
@@ -18,8 +19,6 @@ public class EsQueryService {
 
     @Autowired
     private JestClient jestClient;
-
-
 
     public List<EsProductRealTime> queryProductEs(String deviceNo,long customerId){
         String queryJson = "{\n" +
@@ -120,4 +119,40 @@ public class EsQueryService {
         //获取结果集合
         return recordList;
     }
+
+
+
+    public List<EsSignalRealTime> querySignalEs(String signal,long customerId){
+        String queryJson="{\n" +
+                "  \"query\":{\n" +
+                "    \"bool\":{\n" +
+                "      \"must\":[{\n" +
+                "        \"match\":{\n" +
+                "           \"customerId\":42\n" +
+                "           }\n" +
+                "       },\n" +
+                "       {\n" +
+                "       \"match\":{\n" +
+                "           \"signalNo.keyword\": \"BME_042_001_F_004_258\"\n" +
+                "            }\n" +
+                "       }\n" +
+                "       ]\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+        Search search = new Search.Builder(queryJson).addIndex("signal").addType("_doc").build();
+        SearchResult result = null;
+        try {
+            result = jestClient.execute(search);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        List<EsSignalRealTime> list = new ArrayList<>();
+
+        if(result!=null && null!=result.getHits(Object.class)){
+            list = result.getSourceAsObjectList(EsSignalRealTime.class,true);
+        }
+        return list;
+    }
+
 }

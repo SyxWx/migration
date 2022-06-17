@@ -8,5 +8,20 @@
     </select>
 
 
+    <select id="getSignalList" resultType="com.bme.syx.es.entity.SignalData" parameterType="java.util.Map">
+        SELECT
+            ts.signal_no,
+            tds.device_no,
+            ts.customer_id,
+            ts.category_id,
+            ts.signal_name,
+            ts.unit
+        FROM
+            t_device_signal tds
+                INNER JOIN t_signal ts ON ts.signal_no = tds.signal_no
+        WHERE
+            tds.customer_id = #{customerId}
+          AND tds.device_no = #{deviceNo};
+    </select>
 
 </mapper>
