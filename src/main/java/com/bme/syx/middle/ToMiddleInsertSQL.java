@@ -113,7 +113,7 @@ public class ToMiddleInsertSQL {
          -- format=2   2:float
 
          UPDATE data_types SET format=2 WHERE
-         (category_id IN (2,3,4,6,7,8,9,11,12,13,17,18,19,21,22,23,26,27,28,29,70,113,14,8,10,20,15,300,301,302,303,68,16))
+         (category_id IN (2,3,4,6,7,8,9,11,12,13,17,18,19,21,22,23,26,27,28,29,70,113,14,8,10,20,15,300,301,302,303,68,16,280))
          AND format IS NULL and status = 8;
 
 

@@ -18,10 +18,12 @@ public class ConsumerMessageService {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("syx-product-group");
         //指定NameServer地址，多个地址 ; 隔开
         consumer.setNamesrvAddr("127.0.0.1:9876");
-
         //设置consumer所订阅的Topic和Tag，*代表全部的Tag
         consumer.subscribe("syxtopic","*");
-        consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
+        //设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
+        //如果非第一次启动，那么按照上次消费的位置继续消费
+        consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
+        //处理
         consumer.registerMessageListener(
                 (MessageListenerConcurrently) (list,contexy)->{
                     try {
@@ -46,6 +48,7 @@ public class ConsumerMessageService {
                     }
                     return  ConsumeConcurrentlyStatus.CONSUME_SUCCESS;//消费成功
                 });
+        //启动消费
         consumer.start();
     }
 }

@@ -18,7 +18,7 @@ public class SendMessageService {
         long date = System.currentTimeMillis();
 
         //构建消息对象，主要是设置消息的主题、标签、内容
-        Message message = new Message("syxtopic",("objectName:syx,objectvalue:宋玉新,objectTime:"+date).getBytes());
+        Message message = new Message("syxtopic",("objectName:syx,objectvalue:宋玉新陈必乾,objectTime:"+date).getBytes());
 
         //发送消息
         SendResult result = defaultMQProducer.send(message);
