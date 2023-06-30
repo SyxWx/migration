@@ -17,10 +17,6 @@ spring:
     minIdle: 5
     maxActive: 20
 
-  elasticsearch:
-    jest:
-      uris: http://172.31.235.81:9200, http://172.31.235.62:9200, http://172.31.235.69:9200
-
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
   typeAliasesPackage: com.bme.syx.cloud,*
@@ -43,25 +39,3 @@ pagehelper:
   supportMethodsArguments: true
   params: count=countSql
 #debug: true
-
-datasource:
-  hbase:
-    zookeeper:
-      quorum: 172.31.235.100:2181,172.31.235.106:2181,172.31.235.114:2181
-      # quorum: 172.31.235.67:2181,172.31.235.70:2181,172.31.235.84:2181
-      znode:
-        parent: /hbase
-    table: HISTORY_DATA_NEW
-
-elasticsearch:
-  #基础数据ES地址
-  basic-urls:
-    - http://172.31.141.89:9200
-    - http://172.31.141.90:9200
-    - http://172.31.141.91:9200
-  #运营中心ES地址
-  center-urls:
-    - http://172.31.141.177:9200
-    - http://172.31.141.178:9200
-    - http://172.31.141.179:9200
-

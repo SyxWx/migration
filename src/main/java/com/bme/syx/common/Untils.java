@@ -1,6 +1,5 @@
 package com.bme.syx.common;
 
-import com.bme.syx.cloud.entity.EmissionSource;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
