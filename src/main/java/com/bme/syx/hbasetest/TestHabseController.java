@@ -37,6 +37,15 @@ public class TestHabseController {
         return CommonResult.success(list);
     }
 
+    @RequestMapping("signalnoList")
+    public CommonResult getSignalValueBySignal(String signalNo){
+
+        //  localhost:8080/mig/Hbase/query/signalnoList?signalNo='BMEVDM_ELC_220005_C3_1'
+        List<Map<String, Object>>  list = testHbase.getRowDataFromHbaseBySignal(signalNo);
+
+        System.out.println(list.toString());
+        return CommonResult.success(list);
+    }
 
 
 }

@@ -154,7 +154,7 @@ public class ToMiddleInsertSQL {
                 return "2";
             } else if (remark.indexOf("最大") > -1) {
                 return "3";
-            } else if (remark.indexOf("平均") > -1) {
+            } else if (remark.indexOf("均") > -1) {
                 return "4";
             } else if (remark.indexOf("累计次数") > -1) {
                 return "5";

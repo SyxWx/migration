@@ -33,10 +33,10 @@ public class TestHbase {
         List<Map<String, Object>> list = new ArrayList<>();
 
         LocalDateTime now = LocalDateTime.now().plusMinutes(10);
-        Long startTime = now.minusMinutes(45).toInstant(ZoneOffset.of("+8")).toEpochMilli();
+        Long startTime = now.minusMinutes(4500).toInstant(ZoneOffset.of("+8")).toEpochMilli();
         Long endTime = now.plusMinutes(10).toInstant(ZoneOffset.of("+8")).toEpochMilli();
 
-        String signalNo = "39-4#LC-ME2101_1";
+        String signalNo = "PYGT-SC-4GL-044-2_1";
         String rowKeyStart = signalNo + startTime;
         String rowKeyStop = signalNo + endTime;
         Map<String, Object> data = this.scanLastRow(rowKeyStart, rowKeyStop);
@@ -58,10 +58,10 @@ public class TestHbase {
         List<Map<String, Object>> list = new ArrayList<>();
 
         LocalDateTime now = LocalDateTime.now().plusMinutes(10);
-        Long startTime = now.minusMinutes(45).toInstant(ZoneOffset.of("+8")).toEpochMilli();
+        Long startTime = now.minusMinutes(1).toInstant(ZoneOffset.of("+8")).toEpochMilli();
         Long endTime = now.plusMinutes(10).toInstant(ZoneOffset.of("+8")).toEpochMilli();
 
-        String signalNo = "39-4#LC-ME2101_1";
+        String signalNo = "BMEVDM_ELC_220002_C3_3";
         String rowKeyStart = signalNo + startTime;
         String rowKeyStop = signalNo + endTime;
         List<Map<String, Object>> dataList = this.scanRowKey(rowKeyStart, rowKeyStop);
@@ -81,6 +81,36 @@ public class TestHbase {
         }
         return list;
     }
+
+
+    public List<Map<String, Object>> getRowDataFromHbaseBySignal(String signalNo){
+        List<Map<String, Object>> list = new ArrayList<>();
+
+        LocalDateTime now = LocalDateTime.now().plusMinutes(10);
+        Long startTime = now.minusMinutes(45).toInstant(ZoneOffset.of("+8")).toEpochMilli();
+        Long endTime = now.plusMinutes(10).toInstant(ZoneOffset.of("+8")).toEpochMilli();
+
+        String rowKeyStart = signalNo + startTime;
+        String rowKeyStop = signalNo + endTime;
+        List<Map<String, Object>> dataList = this.scanRowKey(rowKeyStart, rowKeyStop);
+
+        for (Map<String,Object> data:dataList) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("signalNo", signalNo);
+            if (MapUtils.isEmpty(data)) {
+                map.put("event_time", "");
+                map.put("val", "");
+            } else {
+                map.put("event_time", DateUtil.format(new Date(Long.parseLong(data.get("event_time").toString())),
+                        DatePattern.NORM_DATETIME_PATTERN));
+                map.put("val", Double.parseDouble(data.get("val").toString()));
+            }
+            list.add(map);
+        }
+        return list;
+    }
+
+
 
     public List<Map<String, Object>> scanRowKey(String rowKeyStart, String rowKeyStop) {
         List<Map<String, Object>> rtn = new ArrayList<>();

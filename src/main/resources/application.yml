@@ -6,9 +6,10 @@ server:
 #url: jdbc:mysql://172.31.235.64:3306/bme_third_db?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&useSSL=false&autoReconnect=true
 #product
 #url: jdbc:mysql://172.31.235.102:3306/basic_data?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&useSSL=false&autoReconnect=true
+#url: jdbc:mysql://172.31.235.64:3306/sso?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&useSSL=false&autoReconnect=true
 spring:
   datasource:
-    url: jdbc:mysql://172.31.235.64:3306/sso?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&useSSL=false&autoReconnect=true
+    url: jdbc:mysql://192.168.1.101:33001/basic_data?serverTimezone=Asia/Shanghai&characterEncoding=utf-8&useSSL=false&autoReconnect=true
     username: bme
     password: Bme@709394
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -51,4 +52,16 @@ datasource:
       znode:
         parent: /hbase
     table: HISTORY_DATA_NEW
+
+elasticsearch:
+  #基础数据ES地址
+  basic-urls:
+    - http://172.31.141.89:9200
+    - http://172.31.141.90:9200
+    - http://172.31.141.91:9200
+  #运营中心ES地址
+  center-urls:
+    - http://172.31.141.177:9200
+    - http://172.31.141.178:9200
+    - http://172.31.141.179:9200
 
