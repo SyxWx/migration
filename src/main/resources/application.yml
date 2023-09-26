@@ -16,6 +16,32 @@ spring:
     initialSize: 5
     minIdle: 5
     maxActive: 20
+  redis:
+    password: 1qaz@WSX
+    cluster:
+      max-redirects: 10
+      refresh:
+        period: 30s
+        adaptive: true
+      max-tries: 3
+      topology-update-frequency: 5000
+      # 单位是s 设置 Stream 的超时时间，超过该时间后会自动删除消息。
+      stream-timeout: 86400
+      nodes: 192.168.1.132:9000,192.168.1.133:9000,192.168.1.134:9000
+      #nodes: 192.168.1.153:8001,192.168.1.153:8002,192.168.1.153:8003,192.168.1.154:8004,192.168.1.154:8005,192.168.1.154:8006
+    lettuce:
+      pool:
+        #最大允许连接数
+        max-active: 500
+        #最小空闲连接数,最少准备5个可用连接在连接池候着
+        min-idle: 10
+        #最大空闲连接数,空闲连接超过10个后自动释放
+        max-idle: 50
+        #当连接池到达上限后,最多等待30秒尝试获取连接,超时报错
+        max-wait: 30000
+    timeout: 20000
+
+
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml

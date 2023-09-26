@@ -97,7 +97,7 @@ public class CountController {
         FileOutputStream out = null;
         String name = "";
         try {
-            name = "/Users/信号统计" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()).toString() +".xls";
+            name = "/信号统计" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()).toString() +".xls";
             System.out.println(name);
             out = new FileOutputStream(name);
             workbook.write(out);
