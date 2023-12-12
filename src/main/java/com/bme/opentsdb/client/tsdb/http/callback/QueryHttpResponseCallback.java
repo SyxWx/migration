@@ -4,6 +4,7 @@ import com.bme.opentsdb.client.tsdb.bean.request.Query;
 import com.bme.opentsdb.client.tsdb.bean.response.QueryResult;
 import com.bme.opentsdb.client.tsdb.common.Json;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.tomcat.util.http.ResponseUtil;
