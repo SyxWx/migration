@@ -74,12 +74,27 @@ public class CrudTest {
         System.out.println("1111");
         String signalNo = "BMENEWPM1909R0354_61";
         String deviceNo = "BMENEWPM1909R0354";
-        Query query = Query.begin("1679535974")
-                .end("1679536188")
+        String startTime = "1679535974";
+        String endTime = "1679536188";
+        String customerId = "1";
+        List<QueryResult> resultList = queryBymetric(signalNo,deviceNo,startTime,endTime,customerId);
+        if(resultList!=null && resultList.size()>0){
+            LinkedHashMap<Long, Number> dps = resultList.get(0).getDps();
+            dps.forEach((aLong,Number)->{
+                System.out.println("time:"+aLong+"---------value:"+Number);
+            });
+        }
+    }
+
+
+    public List<QueryResult> queryBymetric(String signalNo,String deviceNo,String startTime,String endTime,String customerId){
+        Query query = Query.begin(startTime)
+                .end(endTime)
                 .msResolution()
                 .sub(SubQuery.metric(signalNo)
                         .aggregator(SubQuery.Aggregator.NONE)
                         .tag("device_no",deviceNo)
+                        .tag("customer_id",customerId)
                         .build())
                 .build();
         //同步查询返回结果
@@ -89,13 +104,8 @@ public class CrudTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        LinkedHashMap<Long, Number> dps = resultList.get(0).getDps();
-        dps.forEach((aLong,Number)->{
-            System.out.println(aLong);
-            System.out.println(Number);
-        });
+        return resultList;
     }
-
 
 
 
