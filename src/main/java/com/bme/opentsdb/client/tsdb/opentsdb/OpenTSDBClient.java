@@ -78,32 +78,10 @@ public class OpenTSDBClient {
      * @return
      */
     public List<QueryResult> query(Query query) throws IOException, ExecutionException, InterruptedException {
-        boolean checkGangLu = false;
-        if(!CollectionUtils.isEmpty(query.getQueries())){
-            SubQuery subQuery = query.getQueries().get(0);
-            if(!CollectionUtils.isEmpty(subQuery.getTags())){
-                Map<String, String> tags = subQuery.getTags();
-                if(tags.containsKey("customer_id") && tags.get("customer_id").equals("14")){
-                    checkGangLu = true;
-                }
-            }
-        }
+
         Future<HttpResponse> future = httpClient.post(com.bme.cloud.opentsdb.bean.request.Api.QUERY.getPath(), Json.writeValueAsString(query));
         HttpResponse response = future.get();
         List<QueryResult> results = Json.readValue(ResponseUtil.getContent(response), List.class, QueryResult.class);
-        if(CollectionUtils.isEmpty(results)){
-            return results;
-        }
-        if(checkGangLu){
-            LinkedHashMap<Long, Number> map =  results.get(0).getDps();
-            for(Map.Entry<Long,Number> entry:map.entrySet()){
-                if(entry.getKey()<GANG_LU_TIME){
-                    entry.setValue(null);
-                }else {
-                    break;
-                }
-            }
-        }
         return results;
     }
 
