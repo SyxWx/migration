@@ -15,9 +15,11 @@ import org.apache.http.nio.reactor.IOReactorException;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 
 @Slf4j
@@ -88,11 +90,18 @@ public class CrudTest {
                         .build();
 
                 //同步查询返回结果
-                List<QueryResult> resultList = client.query(query);
+                    try {
+                        List<QueryResult> resultList = client.query(query);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
 
-
-            }
+                }
         );
     }
 }

@@ -3,11 +3,11 @@ package com.bme.opentsdb.client.tsdb.http.callback;
 import com.bme.opentsdb.client.tsdb.bean.request.Query;
 import com.bme.opentsdb.client.tsdb.bean.response.QueryResult;
 import com.bme.opentsdb.client.tsdb.common.Json;
+import com.bme.opentsdb.client.tsdb.common.ResponseUtil;
+import com.bme.opentsdb.client.tsdb.exception.HttpException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.concurrent.FutureCallback;
-import org.apache.tomcat.util.http.ResponseUtil;
 
 import java.io.IOException;
 import java.util.List;

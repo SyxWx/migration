@@ -4,6 +4,7 @@ package com.bme.opentsdb.client.tsdb.opentsdb;
 import com.bme.opentsdb.client.tsdb.bean.request.*;
 import com.bme.opentsdb.client.tsdb.bean.response.QueryResult;
 import com.bme.opentsdb.client.tsdb.common.Json;
+import com.bme.opentsdb.client.tsdb.common.ResponseUtil;
 import com.bme.opentsdb.client.tsdb.http.HttpClient;
 import com.bme.opentsdb.client.tsdb.http.HttpClientFactory;
 import com.bme.opentsdb.client.tsdb.http.callback.QueryHttpResponseCallback;
@@ -16,7 +17,6 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.nio.reactor.IOReactorException;
-import org.apache.tomcat.util.http.ResponseUtil;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
@@ -25,7 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -44,8 +44,8 @@ public class OpenTSDBClient {
 
     private Consumer consumer;
 
-    private BlockingDeque<Point> queue;
-    /***
+    private BlockingQueue<Point> queue;
+    /***    BlockingQueue
      * 通过反射来允许删除
      */
     private static Field queryDeleteField;

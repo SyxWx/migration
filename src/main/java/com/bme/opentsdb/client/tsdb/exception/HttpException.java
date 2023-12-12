@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 @Data
-public class HttpException {
+public class HttpException  extends RuntimeException{
     private ErrorResponse errorResponse;
 
     public HttpException(ErrorResponse errorResponse) {

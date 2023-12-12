@@ -1,5 +1,6 @@
 package com.bme.opentsdb.client.tsdb.common;
 
+import com.bme.opentsdb.client.tsdb.bean.response.ErrorResponse;
 import com.bme.opentsdb.client.tsdb.exception.HttpException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
