@@ -16,9 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 
@@ -36,7 +34,7 @@ public class CrudTest {
     public void config() throws IOReactorException {
 
         //自定义连接配置
-        OpenTSDBConfig config = OpenTSDBConfig.address("http://172.31.235.79", 8010)
+        OpenTSDBConfig config = OpenTSDBConfig.address("http://192.168.1.131", 8599)
                 // http连接池大小，默认100
                 .httpConnectionPool(100)
                 // http请求超时时间，默认100s
@@ -71,37 +69,34 @@ public class CrudTest {
     }
 
     @Test
-    public void queeryOldInsertNew(){
+    public void queeryOldInsertNew() throws Exception{
+
         System.out.println("1111");
-        Map<String,String> map = new HashMap<>();
-        map.put("oldMetric1","newMetric1");
-        map.put("oldMetric2","newMetric2");
-        map.put("oldMetric3","newMetric3");
-        map.put("oldMetric4","newMetric4");
-        map.forEach( (k,v) ->{
-                System.out.println(k+"---"+v);
-                Query query = Query.begin("1635177600")
-                        .end("1635747600")
-                        .msResolution()
-                        .sub(SubQuery.metric(k)
-                                .aggregator(SubQuery.Aggregator.NONE)
-                                .tag("tagk","tagv")
-                                .build())
-                        .build();
-
-                //同步查询返回结果
-                    try {
-                        List<QueryResult> resultList = client.query(query);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-
-                }
-        );
+        String signalNo = "BMENEWPM1909R0354_61";
+        String deviceNo = "BMENEWPM1909R0354";
+        Query query = Query.begin("1679535974")
+                .end("1679536188")
+                .msResolution()
+                .sub(SubQuery.metric(signalNo)
+                        .aggregator(SubQuery.Aggregator.NONE)
+                        .tag("device_no",deviceNo)
+                        .build())
+                .build();
+        //同步查询返回结果
+        List<QueryResult> resultList = new ArrayList<>();
+        try {
+            resultList =  client.query(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        LinkedHashMap<Long, Number> dps = resultList.get(0).getDps();
+        dps.forEach((aLong,Number)->{
+            System.out.println(aLong);
+            System.out.println(Number);
+        });
     }
+
+
+
+
 }
