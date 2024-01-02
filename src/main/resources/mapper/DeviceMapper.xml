@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bme.syx.statistics.dao.DeviceMapper">
+
+
+
+
+    <select id="getDeviceListAll" resultType="com.bme.syx.statistics.entity.Device" >
+
+        select * from t_device where customer_id = #{customerId} and primary_type_id = #{primaryId};
+    </select>
+
+
+</mapper>

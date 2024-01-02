@@ -40,8 +40,9 @@ spring:
         #当连接池到达上限后,最多等待30秒尝试获取连接,超时报错
         max-wait: 30000
     timeout: 20000
-
-
+  elasticsearch:
+    jest:
+      uris: http://ops.bmetech.com:1015
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
