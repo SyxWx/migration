@@ -213,6 +213,12 @@
             <artifactId>spring-boot-test</artifactId>
         </dependency>
 
+        <!-- 热部署 开发工具类-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
 
     </dependencies>
 

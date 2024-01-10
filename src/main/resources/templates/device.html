@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>设备在线统计</title>
+</head>
+<body>
+
+<table id="table2" align="center" width="300px" text-align="right">
+    <tr>
+        <td ><button id="button1" name="点击查询" onclick="onClickQuery()">点击查询设备在线率</button></td>
+        <td ><button id="button2" name="点击查询" onclick="onClickExport()">点击导出设备在线率</button></td>
+    </tr>
+</table>
+
+
+<table border="1" id="dataTable1"  align="center" width="600px" text-align="center">
+    <tr>
+        <th>客户名称</th>
+        <th>设备总数</th>
+        <th>设备在线数</th>
+        <th>设备在线率</th>
+    </tr>
+    <tr id = "dataRow" >
+        <td id ="customerName"></td>
+        <td id ="totalDevice"></td>
+        <td id ="totalOnlineDevice"></td>
+        <td id ="totalValue"></td>
+    </tr>
+</table>
+
+</body>
+<script src="http://localhost:8080/mig/jquery-1.12.0.min.js"></script>
+
+<script type="text/javascript">
+    function onClickQuery(){
+        $.getJSON("getOnline",function(response){
+            $("#dataRow").display = "none";
+            $.each(response,function (idx,item){
+                var row = $("#dataRow").clone();
+                row.find("#customerName").text(item.customerName);
+                row.find("#totalDevice").text(item.totalDevice);
+                row.find("#totalOnlineDevice").text(item.totalOnlineDevice);
+                row.find("#totalValue").text(item.totalValue);
+                row.appendTo("#dataTable1");
+            });
+        });
+    }
+
+    function onClickExport(){
+        $.get("exportOnline",function(response){
+            const fileName="数据在线率.xls";
+            const downloadLink = window.document.createElement("a");
+            downloadLink.href = window.URL.createObjectURL(new Blob([response]), { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8" });
+            downloadLink.download = fileName;
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        });
+    }
+</script>
+
+
+</html>

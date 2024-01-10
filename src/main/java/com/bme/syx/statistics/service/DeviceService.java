@@ -1,5 +1,6 @@
 package com.bme.syx.statistics.service;
 
+import cn.hutool.core.util.NumberUtil;
 import com.bme.syx.es.EsMonitorRealTime;
 import com.bme.syx.statistics.dao.CountMapper;
 import com.bme.syx.statistics.dao.DeviceMapper;
@@ -60,9 +61,12 @@ public class DeviceService {
         List<Customer> customerList = countMapper.selectAllCustomer();
         for (Customer customer : customerList) {
             long customerId = customer.getCustomerId();
-            Map<String, String> map = getDeviceOnlineByCustomerID(customerId);
-            if (map != null) {
-                list.add(map);
+            if(1==customerId || 2==customerId){
+                Map<String, String> map = getDeviceOnlineByCustomerID(customerId);
+                if (map != null) {
+                    map.put("customerName",customer.getCustomerName());
+                    list.add(map);
+                }
             }
         }
         return list;
@@ -92,19 +96,20 @@ public class DeviceService {
         map.put("customerId", customerId + "");
         map.put("totalDevice", totalDevice + "");
         map.put("totalOnlineDevice", totalOnlineDevice + "");
+        map.put("totalValue",  totalDevice == 0L || 0L == totalOnlineDevice ? "0%" : NumberUtil.round(NumberUtil.div(totalOnlineDevice, totalDevice) * 100, 2) + "%");
         return map;
     }
 
 
     public long getDeviceOnlineCount(List<String> deviceNoList, Long primaryId,String customerId) {
         long count = 0;
-        String deviceNo = deviceNoList.stream().map(s -> "\"" + s + "\"").collect(Collectors.joining(","));
+        String deviceNoStr = deviceNoList.stream().map(s -> "\"" + s + "\"").collect(Collectors.joining(","));
         if (1 == primaryId) {
-            count = productDeviceOnLineCount(deviceNo,customerId);
+            count = productDeviceOnLineCount(deviceNoStr,customerId);
         } else if (2 == primaryId) {
-            count = dusterDeviceOnLineCount(deviceNo,customerId);
+            count = dusterDeviceOnLineCount(deviceNoStr,customerId);
         } else if (3 == primaryId) {
-            count = monitorDeviceOnLineCount(deviceNo,customerId);
+            count = monitorDeviceOnLineCount(deviceNoStr,customerId);
         } else {
             count = 0;
         }
@@ -112,10 +117,13 @@ public class DeviceService {
     }
 
 
-    public long productDeviceOnLineCount(String deviceNo,String customerId) {
+    /**
+     *      * 获取生产设备实时状态   runStatus: 0停止   1启动  2无数据
+     */
+    public long productDeviceOnLineCount(String deviceNoStr,String customerId) {
         AtomicLong atomicLong = new AtomicLong(0);
         try {
-            String queryJson = getProductDeviceRealTimeTemplate(deviceNo, customerId);
+            String queryJson = getProductDeviceRealTimeTemplate(deviceNoStr, customerId);
             log.info("-----> product json :{}", queryJson);
             Search search = new Search.Builder(queryJson).addIndex("product").addType("_doc").build();
             SearchResult result = jestClient.execute(search);
@@ -123,7 +131,7 @@ public class DeviceService {
             List<EsProductRealTime> recordList = new ArrayList<>();
             recordList = result.getSourceAsObjectList(EsProductRealTime.class, true);
             for (EsProductRealTime realTime : recordList) {
-                if (realTime != null && realTime.getRunStatus() == 1) {
+                if (realTime != null && (realTime.getRunStatus() == 1 || realTime.getRunStatus() == 0)) {
                     atomicLong.incrementAndGet();
                 }
             }
@@ -133,6 +141,12 @@ public class DeviceService {
         return atomicLong.get();
     }
 
+    /**
+     *      *      * 获取治理设备实时状态   runStatus: 0停止   1启动  2无数据
+     * @param deviceNo
+     * @param customerId
+     * @return
+     */
     public long dusterDeviceOnLineCount(String deviceNo,String customerId) {
         AtomicLong atomicLong = new AtomicLong(0);
         try {
@@ -144,7 +158,7 @@ public class DeviceService {
             List<EsGovernmentRealTime> recordList = new ArrayList<>();
             recordList = result.getSourceAsObjectList(EsGovernmentRealTime.class, true);
             for (EsGovernmentRealTime realTime : recordList) {
-                if (realTime != null && realTime.getRunStatus() == 1) {
+                if (realTime != null &&  (realTime.getRunStatus() == 1 || realTime.getRunStatus() == 0)) {
                     atomicLong.incrementAndGet();
                 }
             }
@@ -154,6 +168,12 @@ public class DeviceService {
         return atomicLong.get();
     }
 
+    /**
+     *      * 获取监测设备实时值 runStatus: 0离线   1在线
+     * @param deviceNo
+     * @param customerId
+     * @return
+     */
     public long monitorDeviceOnLineCount(String deviceNo,String customerId) {
         AtomicLong atomicLong = new AtomicLong(0);
         try {
@@ -176,7 +196,7 @@ public class DeviceService {
     }
 
     /**
-     * 获取检测设备实时值
+     * 获取监测设备实时值 runStatus: 0离线   1在线
      */
     public static String getMonitorRealTimeTemplate(String deviceNo,String customerId) {
 
@@ -208,7 +228,8 @@ public class DeviceService {
 
 
     /**
-     * 获取治理设备实时状态
+     * 获取治理设备实时状态   runStatus: 0停止   1启动  2无数据
+     * 获取监测设备实时值 runStatus: 0离线   1在线
      */
     public static String getGovernmentDeviceRealTimeTemplate(String deviceNo,String customerId){
         return "{\n" +
@@ -237,7 +258,9 @@ public class DeviceService {
     }
 
     /**
-     * 获取生产设备实时状态
+     * 获取生产设备实时状态   runStatus: 0停止   1启动  2无数据
+     * 获取治理设备实时状态   runStatus: 0停止   1启动  2无数据
+     * 获取监测设备实时值 runStatus: 0离线   1在线
      */
     public static String getProductDeviceRealTimeTemplate(String deviceNo,String customerId){
         return "{\n" +
